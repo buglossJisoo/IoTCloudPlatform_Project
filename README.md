@@ -71,7 +71,7 @@
 
 3. 디바이스 로그 조회 REST API 구축
 
-(https://kwanulee.github.io/IoTPlatform/api-gateway.html)
+> (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
 
 * API Gateway -> 스테이지 -> prod -> URL호출 부분의 주소를 이용!
 
