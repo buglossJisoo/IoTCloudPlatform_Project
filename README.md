@@ -168,6 +168,132 @@ class Thing {
 
 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 (공통)
 
+> 0-1. 리소스 /devices 선택
+
+> 0-2. 작업 드롭다운 메뉴 CORS 활성화(Enable CORS) 선택
+
+> 0-3. CORS 활성화 및 기존의 CORS 헤더 대체 선택
+
+> 0-4. 메서드 변경사항 확인 창에서 예, 기존 값을 대체하겠습니다. 선택
+
+> 0-5. 작업 드롭다운 메뉴 Deploy API(API 배포) 선택
+
+> 0-6. 배포 스테이지 드롭다운 메뉴 prod 선택
+
+> 0-7. 배포 Click!
+
+1. 디바이스 목록 조회 REST API 구축
+
+> 1-1. Lambda 함수 생성 
+
+>> Project name : ListingDeviceLambdaJavaProject
+
+>> Class Name: ListingDeviceHandler
+
+>> Input Type : Custom
+
+>>> pom.xml파일에 다음과 같이 추가
+
+>>>
+```javascript
+ <dependencies>
+    ...    
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-iot</artifactId>
+    </dependency>
+
+  </dependencies>
+```
+
+>>> ListingDeviceHandler.java Code
+
+>>>
+```javascript
+import java.util.List;
+import com.amazonaws.services.iot.AWSIot;
+import com.amazonaws.services.iot.AWSIotClientBuilder;
+import com.amazonaws.services.iot.model.ListThingsRequest;
+import com.amazonaws.services.iot.model.ListThingsResult;
+import com.amazonaws.services.iot.model.ThingAttribute;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+public class ListingDeviceHandler implements RequestHandler<Object, String> {
+
+    @Override
+    public String handleRequest(Object input, Context context) {
+
+        // AWSIot 객체를 얻는다. 
+        AWSIot iot = AWSIotClientBuilder.standard().build();
+
+        // ListThingsRequest 객체 설정. 
+        ListThingsRequest listThingsRequest = new ListThingsRequest();
+
+        // listThings 메소드 호출하여 결과 얻음. 
+        ListThingsResult result = iot.listThings(listThingsRequest);
+
+        // result 객체로부터 API 응답모델 문자열 생성하여 반
+        return getResponse(result);
+    }
+
+    /**
+     * ListThingsResult 객체인 result로 부터 ThingName과 ThingArn을 얻어서 Json문자 형식의
+     * 응답모델을 만들어 반환한다.
+     * {
+     *  "things": [ 
+     *       { 
+     *          "thingName": "string",
+     *          "thingArn": "string"
+     *       },
+     *       ...
+     *     ]
+     * }
+     */
+    private String getResponse(ListThingsResult result) {
+        List<ThingAttribute> things = result.getThings();
+
+        String response = "{ \"things\": [";
+        for (int i =0; i<things.size(); i++) {
+            if (i!=0) 
+                response +=",";
+            response += String.format("{\"thingName\":\"%s\", \"thingArn\":\"%s\"}", 
+                                                things.get(i).getThingName(),
+                                                things.get(i).getThingArn());
+
+        }
+        response += "]}";
+        return response;
+    }
+
+}
+```
+
+>>> 다음과 같이 작성 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : ListThingsFunction -> AWSIoTFullAccess정책에 연결되어있는 IAM 역할 선택 -> Upload!
+
+> 2-2. API Gateway 콘솔에서 REST API 생성
+
+>> 1. API 생성 
+
+>>> API 유형 : REST API / API 이름 : snow-api 
+
+>> 2. 리소스 아래 /를 선택 -> 작업 드롭다운 메뉴 리소스 생성을 선택 -> 리소스 이름 :  devices 입력 
+
+>> 3. 작업 드롭다운 메뉴 메서드 생성(Create Method) 선택
+
+>> 5. 리소스 이름 (/devices) 아래에 드롭다운 메뉴 -> GET을 선택 후 확인 표시 아이콘(체크) 선택
+
+>> 6. /devices – GET – 설정 -> 통합 유형에서 Lambda 함수를 선택 -> 저장
+
+>>> - Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : ListThingsFunction
+
+>> 7. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
+
+>> 8. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
+
+>>> 여기서는 작업 드롭다운 메뉴 -> API 배포 Click! -> 배포 스테이지 드롭다운 메뉴 [새 스테이지]를 선택 -> 스테이지 이름 :  prod -> 배포 Click!
+
+
 2. 디바이스 상태 조회 REST API 구축 
 
 > 2-1. Lambda 함수 생성 
@@ -239,23 +365,25 @@ class Event {
 
 >> 6. /devices/{device} – GET – 설정 -> 통합 유형에서 Lambda 함수를 선택 -> 저장
 
->>> Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : GetDeviceFunction
+>>> - Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : GetDeviceFunction
 
 >> 7. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
 
 >> 8. /{device}의 GET 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
 
->>> 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
+>>> - 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
 
 >> 9. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
 
->>> 템플릿 생성 밑에 다음 code 작성 -> 저장
+>>> - 템플릿 생성 밑에 다음 code 작성 -> 저장
 
 ```javascript
 {
   "device": "$input.params('device')"
 }
-``` 
+```
+
+>> 10. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
 
 3. 디바이스 상태 변경 REST API 구축 
 
