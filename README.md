@@ -57,9 +57,102 @@
  
  2. 정렬 키 추카 선택 -> time 입력(데이터 유형 : 번호 선택)
  
- 3. Lambda함수 Eclipse용 AWS Toolkit 이용해 생성 & Upload (https://kwanulee.github.io/IoTPlatform/dynamodb.html)
+ 3. Lambda함수 Eclipse용 AWS Toolkit 이용해 생성 & Upload 
+(https://kwanulee.github.io/IoTPlatform/dynamodb.html)
+
+> Project name : RecordingDeviceDataJavaProject2
+
+> Group ID: com.example.lambda
+
+> Artifact ID: recording
+
+> Class Name: RecordingDeviceInfoHandler2
+
+> Input Type : Custom
+
+>> 
+```javascript
+mport java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.spec.PutItemSpec;
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+public class RecordingDeviceInfoHandler2 implements RequestHandler<Document, String> {
+    private DynamoDB dynamoDb;
+    private String DYNAMODB_TABLE_NAME = "SnowData";
+
+    @Override
+    public String handleRequest(Document input, Context context) {
+        this.initDynamoDbClient();
+        context.getLogger().log("Input: " + input);
+
+        //return null;
+        return persistData(input);
+    }
+
+    private String persistData(Document document) throws ConditionalCheckFailedException {
+
+        // Epoch Conversion Code: https://www.epochconverter.com/
+        SimpleDateFormat sdf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+        String timeString = sdf.format(new java.util.Date (document.timestamp*1000));
+
+        return this.dynamoDb.getTable(DYNAMODB_TABLE_NAME)
+                .putItem(new PutItemSpec().withItem(new Item().withPrimaryKey("deviceId", document.device)
+                        .withLong("time", document.timestamp)
+                        .withString("weight1", document.current.state.reported.weight1)
+                        .withString("weight2", document.current.state.reported.weight2)
+                        .withString("LED", document.current.state.reported.LED)
+                        .withString("BUZZER", document.current.state.reported.BUZZER)
+                        .withString("timestamp",timeString)))
+                .toString();
+    }
+
+    private void initDynamoDbClient() {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion("ap-northeast-2").build();
+
+        this.dynamoDb = new DynamoDB(client);
+    }
+
+}
+
+class Document {
+    public Thing previous;       
+    public Thing current;
+    public long timestamp;
+    public String device;       // AWS IoT에 등록된 사물 이름 
+}
+
+class Thing {
+    public State state = new State();
+    public long timestamp;
+    public String clientToken;
+
+    public class State {
+        public Tag reported = new Tag();
+        public Tag desired = new Tag();
+
+        public class Tag {
+            public String weight1;
+            public String weight2;
+            public String LED;
+            public String BUZZER;
+        }
+    }
+}
+```
+
+>> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : SnowDataFunction
+
  
- 4. AWS IoT Core -> 동작 -> 규칙 -> 이름 : SnowRule인 규칙 생성 -> 규칙 쿼리 설명문 : SELECT *, 'SnowProject' as device FROM '$aws/things/SnowProject/shadow/update/documents' -> 작업 추가-> 메시지 데이터를 전달하는 Lambda 함수 호출 선택 -> 5-3에서 upload한 Lambda함수 선택 -> 작업 추가 -> 규칙 생성 Click!
+ 4. AWS IoT Core -> 동작 -> 규칙 -> 이름 : SnowRule인 규칙 생성 -> 규칙 쿼리 설명문 : SELECT *, 'SnowProject' as device FROM '$aws/things/SnowProject/shadow/update/documents' -> 작업 추가-> 메시지 데이터를 전달하는 Lambda 함수 호출 선택 -> 5-3에서 upload한 SnowDataFunction Lambda함수 선택 -> 작업 추가 -> 규칙 생성 Click!
  
 ## 6. API Gateway를 이용한 RestAPI 생성
 
