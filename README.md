@@ -70,6 +70,8 @@
 
 > Input Type : Custom
 
+>> RecordingDeviceInfoHandler2.java Code
+
 >> 
 ```javascript
 mport java.text.SimpleDateFormat;
@@ -149,7 +151,7 @@ class Thing {
 }
 ```
 
->> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : SnowDataFunction -> Upload!
+>> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : SnowDataFunction -> dynamoDB정책에 연결되어있는 IAM 역할 선택 -> Upload!
 
  
  4. AWS IoT Core -> 동작 -> 규칙 -> 이름 : SnowRule인 규칙 생성 
@@ -166,11 +168,98 @@ class Thing {
 
 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 (공통)
 
-1. 디바이스 상태 조회 REST API 구축 
+2. 디바이스 상태 조회 REST API 구축 
 
-2. 디바이스 상태 변경 REST API 구축 
+> 2-1. Lambda 함수 생성 
 
-3. 디바이스 로그 조회 REST API 구축
+>> Project name : GetDeviceLambdaJavaProject
+
+>> Class Name: GetDeviceHandler
+
+>> Input Type : Custom
+
+>>> pom.xml파일에 다음과 같이 추가
+
+>>>
+```javascript
+ <dependencies>
+    ...    
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-iot</artifactId>
+    </dependency>
+
+  </dependencies>
+```
+
+>>> GetDeviceHandler.java Code
+
+>>>
+```javascript
+import com.amazonaws.services.iotdata.AWSIotData;
+import com.amazonaws.services.iotdata.AWSIotDataClientBuilder;
+import com.amazonaws.services.iotdata.model.GetThingShadowRequest;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+public class GetDeviceHandler implements RequestHandler<Event, String> {
+
+    @Override
+    public String handleRequest(Event event, Context context) {
+        AWSIotData iotData = AWSIotDataClientBuilder.standard().build();
+
+        GetThingShadowRequest getThingShadowRequest  = 
+        new GetThingShadowRequest()
+            .withThingName(event.device);
+
+        iotData.getThingShadow(getThingShadowRequest);
+
+        return new String(iotData.getThingShadow(getThingShadowRequest).getPayload().array());
+    }
+}
+
+class Event {
+    public String device;
+}
+``` 
+
+>>> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : GetDeviceFunction -> AWSIoTFullAccess정책에 연결되어있는 IAM 역할 선택 -> Upload!
+
+> 2-2. API Gateway 콘솔에서 REST API 생성
+
+>> 1. 생성한 snow-api Click! -> 리소스 이름(/devices)을 선택
+
+>> 2. 작업 드롭다운 메뉴에서 리소스 생성을 선택 -> 리소스 이름 :  device 입력 -> 리소스 경로(Resource Path)를 {device}로 바꾸기
+
+>> 3. API Gateway Cors 활성화 옵션을 선택 -> 리소스 생성을 Click!
+
+>> 4. /{device} 리소스가 강조 표시되면 작업에서 메서드 생성(Create Method) 선택
+
+>> 5. 리소스 이름 (/{devices}) 아래에 드롭다운 메뉴 -> GET을 선택 후 확인 표시 아이콘(체크) 선택
+
+>> 6. /devices/{device} – GET – 설정 -> 통합 유형에서 Lambda 함수를 선택 -> 저장
+
+>>> Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : GetDeviceFunction
+
+>> 7. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
+
+>> 8. /{device}의 GET 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
+
+>>> 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
+
+>> 9. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
+
+>>> 템플릿 생성 밑에 다음 code 작성 -> 저장
+
+```javascript
+{
+  "device": "$input.params('device')"
+}
+``` 
+
+3. 디바이스 상태 변경 REST API 구축 
+
+4. 디바이스 로그 조회 REST API 구축
 
 > (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
 
