@@ -769,7 +769,7 @@ class Event {
 
 - Likewise, Click the "allBtn" Button and starts AllActivity.
 
-<img src = "https://user-images.githubusercontent.com/70942492/101483897-2bf3a000-399c-11eb-860f-6b8fe85679a1.png" width="50%" height="50%">
+<img src = "https://user-images.githubusercontent.com/70942492/101483897-2bf3a000-399c-11eb-860f-6b8fe85679a1.png" width="30%" height="30%">
 
 #### 3-2. RealActivity.java
 
