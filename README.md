@@ -773,7 +773,7 @@ class Event {
 
 #### 3-2. RealActivity.java
 
-1. 현재 센서들의 값을 보여주며, LED/BUZZER를 제어할 수 있도록 하였다.
+1. 현재 센서들의 값을 보여주며, LED/BUZZER를 제어할 수 있도록 하였다. (Weight 2 Sensor가 고장나서 제대로 측정이 안됨.)
 
 - 기상청 API, 건축물대장 API를 이용해서 정보가 뜨도록 하였다.
 
