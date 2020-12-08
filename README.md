@@ -765,9 +765,9 @@ class Event {
 
 1. Button을 클릭해서 intent로 API URI를 넘겨준다.
 
-- It starts RealActivity when you click the "nowBtn" Button.
+- It will start RealActivity when you click the "nowBtn(현재상태/제어)" Button.
 
-- Likewise, Click the "allBtn" Button and starts AllActivity.
+- Likewise, Click the "allBtn(로그 조회/제어)" Button to start AllActivity.
 
 <img src = "https://user-images.githubusercontent.com/70942492/101483897-2bf3a000-399c-11eb-860f-6b8fe85679a1.png" width="30%" height="30%">
 
@@ -775,12 +775,12 @@ class Event {
 
 1. 현재 센서들의 값을 보여주며, LED/BUZZER를 제어할 수 있도록 하였다.
 
-<img src = "https://user-images.githubusercontent.com/70942492/101484015-52194000-399c-11eb-9dad-f21527d6d003.png" width="20%" height="20%">
+<img src = "https://user-images.githubusercontent.com/70942492/101484015-52194000-399c-11eb-9dad-f21527d6d003.png" width="30%" height="30%">
 
 ### 3-3. AllActivity.java
 
 1. 원하는 날짜, 시간을 선택해서 센서들의 로그값을 확인 하며, LED/BUZZER를 제어할 수 있다.
 
-<img src = "https://user-images.githubusercontent.com/70942492/101485555-aae9d800-399e-11eb-9fd4-70f1489738ea.png" width="20%" height="20%">
+<img src = "https://user-images.githubusercontent.com/70942492/101485555-aae9d800-399e-11eb-9fd4-70f1489738ea.png" width="30%" height="30%">
 
 
