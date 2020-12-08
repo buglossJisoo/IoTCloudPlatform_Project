@@ -775,6 +775,8 @@ class Event {
 
 1. 현재 센서들의 값을 보여주며, LED/BUZZER를 제어할 수 있도록 하였다.
 
+- 기상청 API, 건축물대장 API를 이용해서 정보가 뜨도록 하였다.
+
 <img src = "https://user-images.githubusercontent.com/70942492/101484015-52194000-399c-11eb-9dad-f21527d6d003.png" width="30%" height="30%">
 
 ### 3-3. AllActivity.java
