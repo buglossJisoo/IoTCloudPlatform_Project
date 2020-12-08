@@ -6,12 +6,11 @@
 
 1. Arduino(MKR WIFI 1010)에 연결된 weight sensor을 이용해 지붕의 무게를 감지해 DynamoDB에 값을 Upload
 
-2. Uploada된 값과 기상청 API, 건축물API를 통해 위험도를 예측(추후, 데이터가 쌓여서 위험도 예측 모델을 만들 수 있음.) 
+2. Upload된 값과 기상청 API, 건축물API를 통해 위험도를 예측(추후, 데이터가 쌓여서 위험도 예측 모델을 만들 수 있음.) 
 
 3. 붕괴 피해가 예상될 경우, APP을 통해 LED와 BUZZER를 ON으로 변화시켜 주민들의 대피를 유도함.(상황 종료시, OFF)
 
-
-![1](https://user-images.githubusercontent.com/70942492/101362675-c643dd00-38e3-11eb-8a3c-9a826b64cc67.png)
+![c](https://user-images.githubusercontent.com/70942492/101444752-815f8b00-3963-11eb-910a-29919af5f08c.png)
 
 ## 1. Arduino MKR WIFI 1010 관련 Library 설치
 
