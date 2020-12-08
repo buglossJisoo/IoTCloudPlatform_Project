@@ -57,7 +57,6 @@
  2. 정렬 키 추카 선택 -> time 입력(데이터 유형 : 번호 선택)
  
  3. Lambda함수 Eclipse용 AWS Toolkit 이용해 생성 & Upload 
-(https://kwanulee.github.io/IoTPlatform/dynamodb.html)
 
 > Project name : RecordingDeviceDataJavaProject2
 
@@ -290,7 +289,7 @@ public class ListingDeviceHandler implements RequestHandler<Object, String> {
 
 >> 8. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
 
->>> 여기서는 작업 드롭다운 메뉴 -> API 배포 Click! -> 배포 스테이지 드롭다운 메뉴 [새 스테이지]를 선택 -> 스테이지 이름 :  prod -> 배포 Click!
+>>> - 여기서는 작업 드롭다운 메뉴 -> API 배포 Click! -> 배포 스테이지 드롭다운 메뉴 [새 스테이지]를 선택 -> 스테이지 이름 :  prod -> 배포 Click!
 
 
 ### 2. 디바이스 상태 조회 REST API 구축 
@@ -496,9 +495,9 @@ class Tag {
 
 >> 5. 모델 Click(리소스, 스테이지 등 메뉴가 있는 곳) -> 생성 Click! -> 작성 후, 모델 생성 Click!
 
->>> 모델 이름 : UpdateDeviceInput / 콘텐츠 유형 : application/json 
+>>> - 모델 이름 : UpdateDeviceInput / 콘텐츠 유형 : application/json 
 
->>> 모델 스키마 다음 code 작성!
+>>> - 모델 스키마 다음 code 작성!
 ```javascript
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
@@ -682,10 +681,6 @@ class Event {
 ```
 
 >> 8. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
-
-> (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
-
-
 
 ## File 설명
 
