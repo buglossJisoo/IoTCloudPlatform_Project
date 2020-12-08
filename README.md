@@ -166,7 +166,7 @@ class Thing {
  
 ## 6. API Gateway를 이용한 RestAPI 생성
 
-0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 (공통)
+### 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 (공통)
 
 > 0-1. 리소스 /devices 선택
 
@@ -182,7 +182,7 @@ class Thing {
 
 > 0-7. 배포 Click!
 
-1. 디바이스 목록 조회 REST API 구축
+### 1. 디바이스 목록 조회 REST API 구축
 
 > 1-1. Lambda 함수 생성 
 
@@ -271,7 +271,7 @@ public class ListingDeviceHandler implements RequestHandler<Object, String> {
 
 >>> 다음과 같이 작성 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : ListThingsFunction -> AWSIoTFullAccess정책에 연결되어있는 IAM 역할 선택 -> Upload!
 
-> 2-2. API Gateway 콘솔에서 REST API 생성
+> 1-2. API Gateway 콘솔에서 REST API 생성
 
 >> 1. API 생성 
 
@@ -294,7 +294,7 @@ public class ListingDeviceHandler implements RequestHandler<Object, String> {
 >>> 여기서는 작업 드롭다운 메뉴 -> API 배포 Click! -> 배포 스테이지 드롭다운 메뉴 [새 스테이지]를 선택 -> 스테이지 이름 :  prod -> 배포 Click!
 
 
-2. 디바이스 상태 조회 REST API 구축 
+### 2. 디바이스 상태 조회 REST API 구축 
 
 > 2-1. Lambda 함수 생성 
 
@@ -385,9 +385,136 @@ class Event {
 
 >> 10. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
 
-3. 디바이스 상태 변경 REST API 구축 
+### 3. 디바이스 상태 변경 REST API 구축 
 
-4. 디바이스 로그 조회 REST API 구축
+> 3-1. Lambda 함수 생성 
+
+>> Project name : UpdateDeviceLambdaJavaProject
+
+>> Class Name: UpdateDeviceHandler
+
+>> Input Type : Custom
+
+>>> pom.xml파일에 다음과 같이 추가
+
+>>>
+```javascript
+ <dependencies>
+    ...    
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-iot</artifactId>
+    </dependency>
+
+  </dependencies>
+```
+
+>>> UpdateDeviceHandler.java Code
+
+>>>
+```javascript
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import com.amazonaws.services.iotdata.AWSIotData;
+import com.amazonaws.services.iotdata.AWSIotDataClientBuilder;
+import com.amazonaws.services.iotdata.model.UpdateThingShadowRequest;
+import com.amazonaws.services.iotdata.model.UpdateThingShadowResult;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+public class UpdateDeviceHandler implements RequestHandler<Event, String> {
+
+    @Override
+    public String handleRequest(Event event, Context context) {
+        context.getLogger().log("Input: " + event);
+
+        AWSIotData iotData = AWSIotDataClientBuilder.standard().build();
+
+        String payload = getPayload(event.tags);
+
+        UpdateThingShadowRequest updateThingShadowRequest  = 
+                new UpdateThingShadowRequest()
+                    .withThingName(event.device)
+                    .withPayload(ByteBuffer.wrap(payload.getBytes()));
+
+        UpdateThingShadowResult result = iotData.updateThingShadow(updateThingShadowRequest);
+        byte[] bytes = new byte[result.getPayload().remaining()];
+        result.getPayload().get(bytes);
+        String resultString = new String(bytes);
+        return resultString;
+    }
+
+    private String getPayload(ArrayList<Tag> tags) {
+        String tagstr = "";
+        for (int i=0; i < tags.size(); i++) {
+            if (i !=  0) tagstr += ", ";
+            tagstr += String.format("\"%s\" : \"%s\"", tags.get(i).tagName, tags.get(i).tagValue);
+        }
+        return String.format("{ \"state\": { \"desired\": { %s } } }", tagstr);
+    }
+
+}
+
+class Event {
+    public String device;
+    public ArrayList<Tag> tags;
+
+    public Event() {
+         tags = new ArrayList<Tag>();
+    }
+}
+
+class Tag {
+    public String tagName;
+    public String tagValue;
+
+    @JsonCreator 
+    public Tag() {
+    }
+
+    public Tag(String n, String v) {
+        tagName = n;
+        tagValue = v;
+    }
+}
+```
+
+>>> 다음과 같이 작성 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : UpdateDeviceFunction -> AWSIoTFullAccess정책에 연결되어있는 IAM 역할 선택 -> Upload!
+
+> 3-2. API Gateway 콘솔에서 REST API 생성
+
+>> 1. 생성한 snow-api Click! -> 리소스 이름(/{device})을 선택
+
+>> 2. 리소스 이름 (/{devices}) 아래에 드롭다운 메뉴 -> PUT을 선택 후 확인 표시 아이콘(체크) 선택
+
+>> 3. /devices/{device} – PUT – 설정 -> 통합 유형에서 Lambda 함수를 선택 -> 저장
+
+>>> - Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : UpdateDeviceFunction
+
+>> 4. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
+
+>> 5. 
+
+>> 8. /{device}의 GET 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
+
+>>> - 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
+
+>> 9. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
+
+>>> - 템플릿 생성 밑에 다음 code 작성 -> 저장
+
+```javascript
+{
+  "device": "$input.params('device')"
+}
+```
+
+>> 10. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
+
+
+### 4. 디바이스 로그 조회 REST API 구축
 
 > (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
 
