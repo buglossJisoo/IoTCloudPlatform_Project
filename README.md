@@ -751,11 +751,11 @@ class Event {
 
 #### 2-2. Buzzer.h, Buzzer.cpp / Led.h, Led.cpp
 
-> Buzzer.h, Buzzer.cpp : Buzzer관련 입출력 PIN 설정, ON/OFF기능 구현, Buzzer의 ON/OFF 상태 관련
+> 1. Buzzer.h, Buzzer.cpp : Buzzer관련 입출력 PIN 설정, ON/OFF기능 구현, Buzzer의 ON/OFF 상태 관련
 
 >> (BUZZER가 ON이면 사이렌 소리가 울리도록 코드 작성)
 
-> Led.h, Led.cpp : Led관련 입출력 PIN 설정, ON/OFF기능 구현, Led의 ON/OFF 상태 관련
+> 2. Led.h, Led.cpp : Led관련 입출력 PIN 설정, ON/OFF기능 구현, Led의 ON/OFF 상태 관련
 
 >> (LED가 ON이면 led가 켜지도록 코드 작성)
 
