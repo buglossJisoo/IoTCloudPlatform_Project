@@ -2,7 +2,7 @@
 
 ## AWS를 이용한 IoT 클라우드 플랫폼 프로젝트
 
-### 주제 : 지붕 붕괴 예방
+### 주제 : AWS를 이용한 지붕 붕괴 예방
 
 1. Arduino(MKR WIFI 1010)에 연결된 weight sensor을 이용해 지붕의 무게를 감지해 DynamoDB에 값을 Upload
 
