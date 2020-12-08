@@ -564,12 +564,26 @@ class Tag {
 
 >>> 쿼리 문자열 추가 : from (캐싱 uncheck) / 쿼리 문자열 추가(Add query string) : to (캐싱 uncheck)
 
->>> 모델 이름 : UpdateDeviceInput / 콘텐츠 유형 : application/json 
+>> 6. /log GET 메서드 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
 
+>>> - 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
+
+>> 7. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
+
+>>> - 템플릿 생성 UpdateDeviceInput 선택 -> 매핑 탬플릿 편집기에 다음과 같은 code 작성 -> 저장
+
+```javascript
+{
+  "device": "$input.params('device')",
+  "from": "$input.params('from')",
+  "to":  "$input.params('to')"
+}
+```
+
+>> 8. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
 
 > (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
 
-* API Gateway -> 스테이지 -> prod -> URL호출 부분의 주소를 이용!
 
 
 ## File 설명
