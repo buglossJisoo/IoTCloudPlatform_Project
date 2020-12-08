@@ -149,10 +149,18 @@ class Thing {
 }
 ```
 
->> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : SnowDataFunction
+>> 다음과 같이 수정 후, [Upload function to AWS Lambda] Click! -> 함수 이름 : SnowDataFunction -> Upload!
 
  
- 4. AWS IoT Core -> 동작 -> 규칙 -> 이름 : SnowRule인 규칙 생성 -> 규칙 쿼리 설명문 : SELECT *, 'SnowProject' as device FROM '$aws/things/SnowProject/shadow/update/documents' -> 작업 추가-> 메시지 데이터를 전달하는 Lambda 함수 호출 선택 -> 5-3에서 upload한 SnowDataFunction Lambda함수 선택 -> 작업 추가 -> 규칙 생성 Click!
+ 4. AWS IoT Core -> 동작 -> 규칙 -> 이름 : SnowRule인 규칙 생성 
+ 
+ > 규칙 쿼리 설명문 : SELECT *, 'SnowProject' as device FROM '$aws/things/SnowProject/shadow/update/documents' 
+ 
+ -> 작업 추가-> 메시지 데이터를 전달하는 Lambda 함수 호출 선택
+ 
+ > 5-3에서 upload한 SnowDataFunction Lambda함수 선택 
+ 
+ -> 작업 추가 -> 규칙 생성 Click!
  
 ## 6. API Gateway를 이용한 RestAPI 생성
 
