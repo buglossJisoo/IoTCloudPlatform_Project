@@ -769,16 +769,18 @@ class Event {
 
 - Likewise, Click the "allBtn" Button and starts AllActivity.
 
-![z](https://user-images.githubusercontent.com/70942492/101483897-2bf3a000-399c-11eb-860f-6b8fe85679a1.png)
+<img src = "https://user-images.githubusercontent.com/70942492/101483897-2bf3a000-399c-11eb-860f-6b8fe85679a1.png" width="50%" height="50%">
 
 #### 3-2. RealActivity.java
 
 1. 현재 센서들의 값을 보여주며, LED/BUZZER를 제어할 수 있도록 하였다.
 
-![3](https://user-images.githubusercontent.com/70942492/101484015-52194000-399c-11eb-9dad-f21527d6d003.png)
+<img src = "https://user-images.githubusercontent.com/70942492/101484015-52194000-399c-11eb-9dad-f21527d6d003.png" width="20%" height="20%">
 
 ### 3-3. AllActivity.java
 
 1. 원하는 날짜, 시간을 선택해서 센서들의 로그값을 확인 하며, LED/BUZZER를 제어할 수 있다.
 
-![2](https://user-images.githubusercontent.com/70942492/101485555-aae9d800-399e-11eb-9fd4-70f1489738ea.png)
+<img src = "https://user-images.githubusercontent.com/70942492/101485555-aae9d800-399e-11eb-9fd4-70f1489738ea.png" width="20%" height="20%">
+
+
