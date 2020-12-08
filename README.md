@@ -495,7 +495,30 @@ class Tag {
 
 >> 4. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
 
->> 5. 
+>> 5. 모델 Click(리소스, 스테이지 등 메뉴가 있는 곳) -> 생성 Click! -> 작성 후, 모델 생성 Click!
+
+>>> 모델 이름 : UpdateDeviceInput / 콘텐츠 유형 : application/json 
+
+>>> 모델 스키마 다음 code 작성!
+```javascript
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "UpdateDeviceInput",
+  "type" : "object",
+  "properties" : {
+      "tags" : {
+          "type": "array",
+          "items": {
+              "type": "object",
+              "properties" : {
+                "tagName" : { "type" : "string"},
+                "tagValue" : { "type" : "string"}
+              }
+          }
+      }
+  }
+}
+```
 
 >> 8. /{device}의 GET 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
 
