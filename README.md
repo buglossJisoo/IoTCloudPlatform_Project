@@ -520,24 +520,52 @@ class Tag {
 }
 ```
 
->> 8. /{device}의 GET 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
+>> 6. /{device}의 PUT 메서드의 통합 요청(Integration Request) 선택 -> 매핑 템플릿 Click -> 매핑 템플릿 추가 Click!
 
 >>> - 요청 본문 패스스루 : 정의된 템플릿이 없는 경우(권장) / Content-Type : application/json 
 
->> 9. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
+>> 7. 추가 팝업 예, 이 통합 보호(Yes, secure this integration) Click!
 
->>> - 템플릿 생성 밑에 다음 code 작성 -> 저장
+>>> - 템플릿 생성 UpdateDeviceInput 선택 -> 매핑 탬플릿 편집기에 다음과 같은 code 작성 -> 저장
 
 ```javascript
+#set($inputRoot = $input.path('$'))
 {
-  "device": "$input.params('device')"
+    "device": "$input.params('device')",
+    "tags" : [
+    ##TODO: Update this foreach loop to reference array from input json
+        #foreach($elem in $inputRoot.tags)
+        {
+            "tagName" : "$elem.tagName",
+            "tagValue" : "$elem.tagValue"
+        } 
+        #if($foreach.hasNext),#end
+        #end
+    ]
 }
 ```
 
->> 10. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
+>> 8. 앞서 적은, 0. CORS 활성화 및 API Gateway 콘솔에서 RESTAPI 배포 실행!
 
 
 ### 4. 디바이스 로그 조회 REST API 구축
+
+>> 1. 생성한 snow-api Click! -> 리소스 이름(/{device})을 선택
+
+>> 2. 작업 드롭다운 메뉴에서 리소스 생성을 선택 -> 리소스 이름 :  log 입력 ->  /log – GET – 설정
+
+>> 3. /devices/{device}/log – GET – 설정 -> 통합 유형에서 Lambda 함수를 선택 -> 저장
+
+>>> - Lambda 프록시 통합 사용 상자를 선택하지 않은 상태 / Lambda 리전 : ap-northeast-2 / Lambda 함수 : LogDeviceFunction
+
+>> 4. Lambda 함수에 대한 권한 추가 팝업(Lambda 함수를 호출하기 위해 API Gateway에 권한을 부여하려고 합니다....”) 확인 Click!
+
+>> 5. 메서드 요청 Click -> URL 쿼리 문자열 파라미터(URL Query String Parameters) Click!
+
+>>> 쿼리 문자열 추가 : from (캐싱 uncheck) / 쿼리 문자열 추가(Add query string) : to (캐싱 uncheck)
+
+>>> 모델 이름 : UpdateDeviceInput / 콘텐츠 유형 : application/json 
+
 
 > (https://kwanulee.github.io/IoTPlatform/api-gateway.html)
 
