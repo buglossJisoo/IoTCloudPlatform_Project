@@ -2,7 +2,7 @@
 
 ## AWS를 이용한 IoT 클라우드 플랫폼 프로젝트
 
-### 주제 : AWS를 이용한 지붕 붕괴 예방
+### 주제 : AWS를 이용한 지붕 붕괴 예방 서비스
 
 1. Arduino(MKR WIFI 1010)에 연결된 weight sensor을 이용해 지붕의 무게를 감지해 DynamoDB에 값을 Upload
 
@@ -698,9 +698,9 @@ class Event {
 
 #### 2-1. Arduino_SnowProject.ino
 
-1. Weight sensor 관련 library, Led, Buzzer, mkr, wifi 관련 파일들 정의
+> 1. Weight sensor 관련 library, Led, Buzzer, mkr, wifi 관련 파일들 정의
 
-2. 
+> 2. 
 
 - Arduino에 연결된 Weight Sensor, Led, buzzer의 현재 상태를 topic에 update 
 
@@ -751,13 +751,13 @@ class Event {
 
 #### 2-2. Buzzer.h, Buzzer.cpp / Led.h, Led.cpp
 
-Buzzer.h, Buzzer.cpp : Buzzer관련 입출력 PIN 설정, ON/OFF기능 구현, Buzzer의 ON/OFF 상태 관련
+> Buzzer.h, Buzzer.cpp : Buzzer관련 입출력 PIN 설정, ON/OFF기능 구현, Buzzer의 ON/OFF 상태 관련
 
-> (BUZZER가 ON이면 사이렌 소리가 울리도록 코드 작성)
+>> (BUZZER가 ON이면 사이렌 소리가 울리도록 코드 작성)
 
-Led.h, Led.cpp : Led관련 입출력 PIN 설정, ON/OFF기능 구현, Led의 ON/OFF 상태 관련
+> Led.h, Led.cpp : Led관련 입출력 PIN 설정, ON/OFF기능 구현, Led의 ON/OFF 상태 관련
 
-> (LED가 ON이면 led가 켜지도록 코드 작성)
+>> (LED가 ON이면 led가 켜지도록 코드 작성)
 
 ### 3. Android_SnowProject/SnowProject(Android App Code)
 
