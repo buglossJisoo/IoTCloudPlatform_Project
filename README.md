@@ -765,7 +765,7 @@ class Event {
 
 > urlStr1 : 디바이스 상태 조회/변경 API URL(https://xxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/devices/{devices_name})
 
-> urlStr2 : 디바이스 로그 조회 API URL(https://xxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/devices/{devices_name}/log
+> urlStr2 : 디바이스 로그 조회 API URL(https://xxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/devices/{devices_name}/log)
 
 
 #### 3-1. ButtonActivity.java
