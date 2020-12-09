@@ -761,6 +761,13 @@ class Event {
 
 ### 3. Android_SnowProject/SnowProject(Android App Code)
 
+- RealActivity, AllActivity에 있는 urlStr1, urlStr2는 각각 6. API Gateway를 이용한 RestAPI 생성에서 만든 API 서버 URL
+
+> urlStr1 : 디바이스 상태 조회/변경 API URL(https://xxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/devices/{devices_name})
+
+> urlStr2 : 디바이스 로그 조회 API URL(https://xxxxxxxx.execute-api.ap-northeast-2.amazonaws.com/prod/devices/{devices_name}/log
+
+
 #### 3-1. ButtonActivity.java
 
 1. Button을 클릭해서 intent로 API URI를 넘겨준다.
